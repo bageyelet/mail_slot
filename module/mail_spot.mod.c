@@ -23,15 +23,15 @@ __attribute__((section("__versions"))) = {
 	{ 0xb4b37155, __VMLINUX_SYMBOL_STR(__register_chrdev) },
 	{ 0xc671e369, __VMLINUX_SYMBOL_STR(_copy_to_user) },
 	{ 0x940602e5, __VMLINUX_SYMBOL_STR(down_trylock) },
-	{ 0xb5419b40, __VMLINUX_SYMBOL_STR(_copy_from_user) },
-	{ 0xd2b09ce5, __VMLINUX_SYMBOL_STR(__kmalloc) },
 	{ 0x71e3cecb, __VMLINUX_SYMBOL_STR(up) },
 	{ 0x9f6b4c62, __VMLINUX_SYMBOL_STR(down_interruptible) },
+	{ 0xb5419b40, __VMLINUX_SYMBOL_STR(_copy_from_user) },
+	{ 0xd2b09ce5, __VMLINUX_SYMBOL_STR(__kmalloc) },
 	{ 0x20705009, __VMLINUX_SYMBOL_STR(kmem_cache_alloc_trace) },
 	{ 0x8733c9e1, __VMLINUX_SYMBOL_STR(kmalloc_caches) },
+	{ 0x37a0cba, __VMLINUX_SYMBOL_STR(kfree) },
 	{ 0x27e1a049, __VMLINUX_SYMBOL_STR(printk) },
 	{ 0x8e663bd9, __VMLINUX_SYMBOL_STR(current_task) },
-	{ 0x37a0cba, __VMLINUX_SYMBOL_STR(kfree) },
 	{ 0xbdfb6dbb, __VMLINUX_SYMBOL_STR(__fentry__) },
 };
 

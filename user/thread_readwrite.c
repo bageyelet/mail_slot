@@ -6,17 +6,26 @@
 #include "../module/ioctl_cmds.h"
 
 #define N 50
+#define M 5000
 int blocking = 1;
 
 void *write_fun(void *args) {
     int fd = *(int*)args;
-    write(fd, "ciao\n", 5);
+    int i;
+    for (i=0; i<M; i++) {
+        write(fd, "ciao\n", 6);
+        // sleep(1);
+    }
 }
 
 void *read_fun(void* args) {
     int fd = *(int*)args;
     char data[512];
-    read(fd, data, 512);
+    int i;
+    for (i=0; i<M; i++) {
+        read(fd, data, 512);
+        // sleep(1);
+    }
 }
 
  
@@ -29,7 +38,7 @@ int main(int argc, char const *argv[]) {
     if(fd < 0)
         return 1;
 
-    ioctl(fd, CHANGE_MAX_MEX_LEN, 1024);
+    ioctl(fd, CHANGE_MAX_MEX_LEN, 512);
 
     if (!blocking)
         ioctl(fd, NON_BLOCKING_READ);

@@ -27,6 +27,8 @@ MODULE_AUTHOR("Luca Borzacchiello");
 static int default_blocking_read = 1;
 module_param(default_blocking_read,int,0666);
 
+int is_smounting = 0;
+
 static int Major;
 mex_list messages[MAX_INSTANCES];
 mex_node head[MAX_INSTANCES];
@@ -41,9 +43,12 @@ typedef struct session_data {
 } session_data;
 
 static int mail_spot_open(struct inode* inode, struct file* file) {
+
+    if (is_smounting) return -5;
+
     dev_t info = inode->i_rdev;
     int minor = MINOR(info);
-    if (minor >= MAX_INSTANCES) return -1;
+    if (minor >= MAX_INSTANCES) return -2;
 
     session_data* d = (session_data*)kmalloc(sizeof(session_data), __GFP_WAIT);
     if (!d) {
@@ -85,16 +90,21 @@ static ssize_t mail_spot_write(struct file* filp, const char* buff, size_t len, 
     int max_mex_len = messages[minor].max_mex_len;
 
     #ifdef DEBUG
-    printk("%s: mail_spot with minor=%d wrote by pid=%d\n", MODNAME, minor, current->pid);
+    printk("%s: mail_spot with minor=%d called write by pid=%d\n", MODNAME, minor, current->pid);
     #endif
 
-    if (len > max_mex_len) len = max_mex_len;
+    if (len > max_mex_len) {
+        #ifdef DEBUG
+        printk("%s: %d is trying to write too many bytes, minor=%d\n", MODNAME, current->pid, minor);
+        #endif
+        return -4;
+    }
     mex_node* n = (mex_node*)kmalloc(sizeof(mex_node), __GFP_WAIT);
     if (!n) {
         printk("%s: allocation of node buffer failed, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
         return -1;
     }
-    char* mex = (char*)kmalloc(len+1, __GFP_WAIT);
+    char* mex = (char*)kmalloc(len, __GFP_WAIT);
     if (!mex) {
         printk("%s: allocation of mex buffer failed, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
         return -2;
@@ -104,7 +114,7 @@ static ssize_t mail_spot_write(struct file* filp, const char* buff, size_t len, 
         printk("%s: copy_from_user failed, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
         return -3;
     }
-    mex[len] = '\0';
+    // mex[len] = '\0';
 
     #ifdef DEBUG
     printk("%s: the string to write is: %s\n",MODNAME, mex);
@@ -113,7 +123,7 @@ static ssize_t mail_spot_write(struct file* filp, const char* buff, size_t len, 
     ret = down_interruptible(&sems[minor]);
     if (ret != 0) {
         printk("%s: WRITE: down_interruptible on sem, sig arrived, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
-        return -4;
+        return -5;
     }
     n->mex = mex;
     n->len = len;
@@ -125,6 +135,11 @@ static ssize_t mail_spot_write(struct file* filp, const char* buff, size_t len, 
     up(&sems[minor]);
 
     up(&sems_blocking_read[minor]);
+
+    #ifdef DEBUG
+    printk("%s: succesfully wrote, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
+    #endif
+
     return len;
 }
 
@@ -132,11 +147,12 @@ static ssize_t mail_spot_read(struct file* filp, char* buff, size_t len, loff_t*
 
     int minor = ((session_data*)filp->private_data)->minor;
     int blocking_read = ((session_data*)filp->private_data)->blocking_read;
+    // int max_mex_len = messages[minor].max_mex_len;
     int ret;
     mex_node* n;
 
     #ifdef DEBUG
-    printk("%s: mail_spot with minor=%d readed by pid=%d\n", MODNAME, minor, current->pid);
+    printk("%s: mail_spot with minor=%d called read by pid=%d\n", MODNAME, minor, current->pid);
     #endif
 
 
@@ -161,13 +177,21 @@ static ssize_t mail_spot_read(struct file* filp, char* buff, size_t len, loff_t*
 
     n = messages[minor].head->next;
 
+    if (len < n->len) {
+        up(&sems[minor]);
+        up(&sems_blocking_read[minor]);
+        #ifdef DEBUG
+        printk("%s: READ: %d is trying to read too few bytes, minor=%d\n", MODNAME, current->pid, minor);
+        #endif
+        return -4;
+    }
+
     n->prev->next = n->next;
     n->next->prev = n->prev;
     messages[minor].length--;
     up(&sems[minor]);
 
-    int l = len<n->len?len:n->len;
-    ret = copy_to_user(buff, n->mex, l);
+    ret = copy_to_user(buff, n->mex, n->len);
     if (ret != 0) {
         printk("%s: copy_to_user failed, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
         return -1;
@@ -180,7 +204,7 @@ static ssize_t mail_spot_read(struct file* filp, char* buff, size_t len, loff_t*
     printk("%s: succesfully readed, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
     #endif
 
-    return l;
+    return n->len;
 }
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,35))
@@ -190,7 +214,7 @@ static long mail_spot_ioctl(struct file *file, unsigned int cmd, unsigned long a
 #endif
     {
 
-        int ret;
+        // int ret;
         int minor = ((session_data*)file->private_data)->minor;
         session_data* d = file->private_data;
 
@@ -218,20 +242,28 @@ static long mail_spot_ioctl(struct file *file, unsigned int cmd, unsigned long a
                 break;
 
             case CHANGE_MAX_MEX_LEN:
-                ret = down_interruptible(&sems[minor]);
-                if (ret != 0) {
-                    printk("%s: IOCTL: down_interruptible on sems, sig arrived, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
-                    return -2;
-                }
-                if (messages[minor].length > 0) {
-                    up(&sems[minor]);
-                    return -1;
-                }
+                // ret = down_interruptible(&sems[minor]);
+                // if (ret != 0) {
+                //     printk("%s: IOCTL: down_interruptible on sems, sig arrived, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
+                //     return -2;
+                // }
+                // if (messages[minor].length > 0) {
+                //     up(&sems[minor]);
+                //     return -1;
+                // }                // ret = down_interruptible(&sems[minor]);
+                // if (ret != 0) {
+                //     printk("%s: IOCTL: down_interruptible on sems, sig arrived, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
+                //     return -2;
+                // }
+                // if (messages[minor].length > 0) {
+                //     up(&sems[minor]);
+                //     return -1;
+                // }
                 messages[minor].max_mex_len = arg;
-                up(&sems[minor]);
+                // up(&sems[minor]);
 
                 #ifdef DEBUG
-                printk("%s: ioctl changed max_mex_len with value=%d, minor=%d, pid=%d\n", MODNAME, arg, minor, current->pid);
+                printk("%s: ioctl changed max_mex_len with value=%lu, minor=%d, pid=%d\n", MODNAME, arg, minor, current->pid);
                 #endif
 
                 break;
@@ -241,6 +273,7 @@ static long mail_spot_ioctl(struct file *file, unsigned int cmd, unsigned long a
     }
 
 static struct file_operations fops = {
+    .owner = THIS_MODULE,
     .write = mail_spot_write,
     .read = mail_spot_read,
     .open =  mail_spot_open,
@@ -282,26 +315,27 @@ int init_module(void) {
 
 void cleanup_module(void) {
 
-    // DA RIVEDERE
-    // idea: lista di processi in attesa, segnale a tutti i processi (?)
-    // http://www.nextinnovation.org/doku.php?id=linux_sending_signal
-    unregister_chrdev(Major, DEVICE_NAME);
-    printk(KERN_INFO "%s: device unregistered, it was assigned major number %d\n", MODNAME, Major);
-    
-    int i;
+    is_smounting = 1;
+
+    int i;    
     for (i=0; i<MAX_INSTANCES; i++) {
         if (messages[i].head->next->mex == NULL) continue;
+
+        #ifdef DEBUG
         printk(KERN_INFO "%s: cleaning list %d\n", MODNAME, i);
+        #endif
+        
         mex_node* tmp = messages[i].head->next;
         while (tmp->next->mex != NULL) {
             tmp = tmp->next;
-            // printk(KERN_INFO "%s: cleaning mex %s\n", MODNAME, tmp->prev->mex);
             kfree(tmp->prev->mex);
             kfree(tmp->prev);
         }
-        // printk(KERN_INFO "%s: cleaning mex %s\n", MODNAME, tmp->mex);
         kfree(tmp->mex);
         kfree(tmp);
     }
+
+    unregister_chrdev(Major, DEVICE_NAME);
+    printk(KERN_INFO "%s: mail_spot succesfully unregistered, it was assigned major number %d\n", MODNAME, Major);
 
 }
