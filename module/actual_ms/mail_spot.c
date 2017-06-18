@@ -52,7 +52,7 @@ int get_max_mex_len_mail_spot(int minor) {
     if (minor > 255 || minor < 0) {
         return -1;
     }
-    return atomic_read(&mail_spot_messages[minor].max_mex_len);
+    return mail_spot_messages[minor].max_mex_len;
 }
 EXPORT_SYMBOL(get_max_mex_len_mail_spot);
 
@@ -99,7 +99,7 @@ static int mail_spot_release(struct inode* inode, struct file* file) {
 static ssize_t mail_spot_write(struct file* filp, const char* buff, size_t len, loff_t* off) {
 
     int minor = ((session_data*)filp->private_data)->minor;
-    int max_mex_len = atomic_read(&mail_spot_messages[minor].max_mex_len);
+    int max_mex_len = mail_spot_messages[minor].max_mex_len;
 
     #ifdef DEBUG
     printk("%s: mail_spot with minor=%d called write by pid=%d\n", MODNAME, minor, current->pid);
@@ -219,7 +219,6 @@ static long mail_spot_ioctl(struct file *file, unsigned int cmd, unsigned long a
 #endif
     {
 
-        // int ret;
         int minor = ((session_data*)file->private_data)->minor;
         session_data* d = file->private_data;
 
@@ -248,8 +247,8 @@ static long mail_spot_ioctl(struct file *file, unsigned int cmd, unsigned long a
 
             case CHANGE_MAX_MEX_LEN:
 
-                if (arg < 0) return -1;
-                atomic_set(&mail_spot_messages[minor].max_mex_len, arg);
+                if (arg < 0 || arg > MAX_UNSIGNED) return -1;
+                mail_spot_messages[minor].max_mex_len = arg;
 
                 #ifdef DEBUG
                 printk("%s: ioctl changed max_mex_len with value=%lu, minor=%d, pid=%d\n", MODNAME, arg, minor, current->pid);
@@ -291,7 +290,7 @@ int init_module(void) {
         head[i].next = &tail[i];
         tail[i].prev = &head[i];
         mail_spot_messages[i].length = 0;     
-        atomic_set(&mail_spot_messages[i].max_mex_len, DEFAULT_MAX_MEX_LEN);
+        mail_spot_messages[i].max_mex_len = DEFAULT_MAX_MEX_LEN;
         spin_lock_init(&mail_spot_messages[i].lock);
         atomic_set(&(mail_spot_messages[i].count), 0);
 
