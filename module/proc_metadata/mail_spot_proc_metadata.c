@@ -83,6 +83,7 @@ int init_module(void) {
     get_users_count = proc_create("get_users_count", 0444, proc_parent, &f_ops_get_users_count);
     if (get_users_count == NULL) {
         remove_proc_entry("get_users_count", proc_parent);
+        remove_proc_entry("mail_spot_metadata",NULL);
         printk("Error creating get_users_count\n");
         return -1;
     }
@@ -90,7 +91,9 @@ int init_module(void) {
     get_max_mex_len = proc_create("get_max_mex_len", 0444, proc_parent, &f_ops_get_max_mex_len);
     if (get_users_count == NULL) {
         remove_proc_entry("get_max_mex_len", proc_parent);
-        printk(KERN_ALERT "Error creating get_max_mex_len\n");
+        remove_proc_entry("get_users_count", proc_parent);
+        remove_proc_entry("mail_spot_metadata",NULL);
+        printk("Error creating get_max_mex_len\n");
         return -1;
     }
 

@@ -324,5 +324,4 @@ void cleanup_module(void) {
 
     unregister_chrdev(Major, DEVICE_NAME);
     printk(KERN_INFO "%s: mail_spot succesfully unregistered, it was assigned major number %d\n", MODNAME, Major);
-
 }
