@@ -56,6 +56,15 @@ int get_max_mex_len_mail_spot(int minor) {
 }
 EXPORT_SYMBOL(get_max_mex_len_mail_spot);
 
+int get_number_messages_mail_spot(int minor) {
+    if (minor > 255 || minor < 0) {
+        return -1;
+    }
+
+    return atomic_read(&mail_spot_messages[minor].length);
+}
+EXPORT_SYMBOL(get_number_messages_mail_spot);
+
 static int mail_spot_open(struct inode* inode, struct file* file) {
 
     dev_t info = inode->i_rdev;
@@ -139,10 +148,11 @@ static ssize_t mail_spot_write(struct file* filp, const char* buff, size_t len, 
     n->prev = mail_spot_messages[minor].tail->prev;
     mail_spot_messages[minor].tail->prev->next = n;
     mail_spot_messages[minor].tail->prev = n;
-    mail_spot_messages[minor].length++;
     spin_unlock(&mail_spot_messages[minor].lock);
 
     up(&sems_blocking_read[minor]);
+
+    atomic_inc(&mail_spot_messages[minor].length);
 
     #ifdef DEBUG
     printk("%s: succesfully wrote, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
@@ -192,8 +202,9 @@ static ssize_t mail_spot_read(struct file* filp, char* buff, size_t len, loff_t*
 
     n->prev->next = n->next;
     n->next->prev = n->prev;
-    mail_spot_messages[minor].length--;
     spin_unlock(&mail_spot_messages[minor].lock);
+
+    atomic_dec(&mail_spot_messages[minor].length);
 
     ret = copy_to_user(buff, n->mex, n->len);
     if (ret != 0) {
@@ -288,11 +299,11 @@ int init_module(void) {
         mail_spot_messages[i].head = &head[i];
         mail_spot_messages[i].tail = &tail[i];
         head[i].next = &tail[i];
-        tail[i].prev = &head[i];
-        mail_spot_messages[i].length = 0;     
+        tail[i].prev = &head[i];  
         mail_spot_messages[i].max_mex_len = DEFAULT_MAX_MEX_LEN;
         spin_lock_init(&mail_spot_messages[i].lock);
         atomic_set(&(mail_spot_messages[i].count), 0);
+        atomic_set(&(mail_spot_messages[i].length), 0);
 
         sema_init(&sems_blocking_read[i], 0);
     }

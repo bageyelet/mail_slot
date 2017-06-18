@@ -16,7 +16,7 @@ typedef struct mex_node {
 typedef struct mex_list {
     struct mex_node* head;
     struct mex_node* tail;
-    int length;
+    atomic_t length;
     unsigned int max_mex_len;
     atomic_t count;
     spinlock_t lock;
