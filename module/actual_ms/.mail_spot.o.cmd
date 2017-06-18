@@ -1,8 +1,8 @@
-cmd_/media/sf_shared/mail_spot/module/mail_spot.o :=  gcc-4.8 -Wp,-MD,/media/sf_shared/mail_spot/module/.mail_spot.o.d  -nostdinc -isystem /usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/src/linux-headers-3.16.0-4-common/arch/x86/include -Iarch/x86/include/generated  -I/usr/src/linux-headers-3.16.0-4-common/include -Iinclude -I/usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi -Iarch/x86/include/generated/uapi -I/usr/src/linux-headers-3.16.0-4-common/include/uapi -Iinclude/generated/uapi -include /usr/src/linux-headers-3.16.0-4-common/include/linux/kconfig.h   -I/media/sf_shared/mail_spot/module -D__KERNEL__ -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -Werror-implicit-function-declaration -Wno-format-security -std=gnu89 -m64 -mno-mmx -mno-sse -mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3 -mtune=generic -mno-red-zone -mcmodel=kernel -funit-at-a-time -maccumulate-outgoing-args -DCONFIG_X86_X32_ABI -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DCONFIG_AS_CFI_SECTIONS=1 -DCONFIG_AS_FXSAVEQ=1 -DCONFIG_AS_CRC32=1 -DCONFIG_AS_AVX=1 -DCONFIG_AS_AVX2=1 -pipe -Wno-sign-compare -fno-asynchronous-unwind-tables -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -fno-delete-null-pointer-checks -O2 -Wframe-larger-than=2048 -fstack-protector -Wno-unused-but-set-variable -fno-var-tracking-assignments -g -pg -mfentry -DCC_USING_FENTRY -Wdeclaration-after-statement -Wno-pointer-sign -fno-strict-overflow -fconserve-stack -Werror=implicit-int -Werror=strict-prototypes -DCC_HAVE_ASM_GOTO  -DMODULE  -D"KBUILD_STR(s)=\#s" -D"KBUILD_BASENAME=KBUILD_STR(mail_spot)"  -D"KBUILD_MODNAME=KBUILD_STR(mail_spot)" -c -o /media/sf_shared/mail_spot/module/.tmp_mail_spot.o /media/sf_shared/mail_spot/module/mail_spot.c
+cmd_/media/sf_shared/mail_spot/module/actual_ms/mail_spot.o :=  gcc-4.8 -Wp,-MD,/media/sf_shared/mail_spot/module/actual_ms/.mail_spot.o.d  -nostdinc -isystem /usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/src/linux-headers-3.16.0-4-common/arch/x86/include -Iarch/x86/include/generated  -I/usr/src/linux-headers-3.16.0-4-common/include -Iinclude -I/usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi -Iarch/x86/include/generated/uapi -I/usr/src/linux-headers-3.16.0-4-common/include/uapi -Iinclude/generated/uapi -include /usr/src/linux-headers-3.16.0-4-common/include/linux/kconfig.h   -I/media/sf_shared/mail_spot/module/actual_ms -D__KERNEL__ -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -fno-common -Werror-implicit-function-declaration -Wno-format-security -std=gnu89 -m64 -mno-mmx -mno-sse -mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3 -mtune=generic -mno-red-zone -mcmodel=kernel -funit-at-a-time -maccumulate-outgoing-args -DCONFIG_X86_X32_ABI -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DCONFIG_AS_CFI_SECTIONS=1 -DCONFIG_AS_FXSAVEQ=1 -DCONFIG_AS_CRC32=1 -DCONFIG_AS_AVX=1 -DCONFIG_AS_AVX2=1 -pipe -Wno-sign-compare -fno-asynchronous-unwind-tables -mno-sse -mno-mmx -mno-sse2 -mno-3dnow -mno-avx -fno-delete-null-pointer-checks -O2 -Wframe-larger-than=2048 -fstack-protector -Wno-unused-but-set-variable -fno-var-tracking-assignments -g -pg -mfentry -DCC_USING_FENTRY -Wdeclaration-after-statement -Wno-pointer-sign -fno-strict-overflow -fconserve-stack -Werror=implicit-int -Werror=strict-prototypes -DCC_HAVE_ASM_GOTO  -DMODULE  -D"KBUILD_STR(s)=\#s" -D"KBUILD_BASENAME=KBUILD_STR(mail_spot)"  -D"KBUILD_MODNAME=KBUILD_STR(mail_spot)" -c -o /media/sf_shared/mail_spot/module/actual_ms/.tmp_mail_spot.o /media/sf_shared/mail_spot/module/actual_ms/mail_spot.c
 
-source_/media/sf_shared/mail_spot/module/mail_spot.o := /media/sf_shared/mail_spot/module/mail_spot.c
+source_/media/sf_shared/mail_spot/module/actual_ms/mail_spot.o := /media/sf_shared/mail_spot/module/actual_ms/mail_spot.c
 
-deps_/media/sf_shared/mail_spot/module/mail_spot.o := \
+deps_/media/sf_shared/mail_spot/module/actual_ms/mail_spot.o := \
   /usr/src/linux-headers-3.16.0-4-common/include/linux/types.h \
     $(wildcard include/config/have/uid16.h) \
     $(wildcard include/config/uid16.h) \
@@ -751,9 +751,9 @@ deps_/media/sf_shared/mail_spot/module/mail_spot.o := \
   /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/fcntl.h \
   /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi/asm/fcntl.h \
   /usr/src/linux-headers-3.16.0-4-common/include/uapi/asm-generic/fcntl.h \
-  /media/sf_shared/mail_spot/module/mexlist.h \
-  /media/sf_shared/mail_spot/module/ioctl_cmds.h \
+  /media/sf_shared/mail_spot/module/actual_ms/mexlist.h \
+  /media/sf_shared/mail_spot/module/actual_ms/ioctl_cmds.h \
 
-/media/sf_shared/mail_spot/module/mail_spot.o: $(deps_/media/sf_shared/mail_spot/module/mail_spot.o)
+/media/sf_shared/mail_spot/module/actual_ms/mail_spot.o: $(deps_/media/sf_shared/mail_spot/module/actual_ms/mail_spot.o)
 
-$(deps_/media/sf_shared/mail_spot/module/mail_spot.o):
+$(deps_/media/sf_shared/mail_spot/module/actual_ms/mail_spot.o):

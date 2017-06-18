@@ -2,7 +2,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
-#include "../module/ioctl_cmds.h"
+#include "../module/actual_ms/ioctl_cmds.h"
  
 int main(int argc, char const *argv[]) {
 
@@ -22,8 +22,12 @@ int main(int argc, char const *argv[]) {
 
     write(fd, "ciao", 5); // OK
 
+    read(fd, data, 1); // it'll fail
+
     read(fd, data, 2); // OK the first message is "c"
     printf("%s\n", data);
+
+    read(fd, data, 2); // it'll fail
 
     read(fd, data, 5); // OK the message is "ciao"
     printf("%s\n", data);
