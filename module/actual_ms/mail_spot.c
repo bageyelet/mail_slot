@@ -41,7 +41,7 @@ typedef struct session_data {
 } session_data;
 
 int get_users_mail_spot(int minor) {
-    if (minor > 255 || minor < 0) {
+    if (minor >= MAX_INSTANCES || minor < 0) {
         return -1;
     }
     return atomic_read(&mail_spot_messages[minor].count);
@@ -49,7 +49,7 @@ int get_users_mail_spot(int minor) {
 EXPORT_SYMBOL(get_users_mail_spot);
 
 int get_max_mex_len_mail_spot(int minor) {
-    if (minor > 255 || minor < 0) {
+    if (minor >= MAX_INSTANCES || minor < 0) {
         return -1;
     }
     return mail_spot_messages[minor].max_mex_len;
@@ -57,10 +57,9 @@ int get_max_mex_len_mail_spot(int minor) {
 EXPORT_SYMBOL(get_max_mex_len_mail_spot);
 
 int get_number_messages_mail_spot(int minor) {
-    if (minor > 255 || minor < 0) {
+    if (minor >= MAX_INSTANCES || minor < 0) {
         return -1;
     }
-
     return atomic_read(&mail_spot_messages[minor].length);
 }
 EXPORT_SYMBOL(get_number_messages_mail_spot);
@@ -106,6 +105,8 @@ static int mail_spot_release(struct inode* inode, struct file* file) {
 }
 
 static ssize_t mail_spot_write(struct file* filp, const char* buff, size_t len, loff_t* off) {
+
+    if (buff == NULL) return -5;
 
     int minor = ((session_data*)filp->private_data)->minor;
     int max_mex_len = mail_spot_messages[minor].max_mex_len;

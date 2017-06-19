@@ -16,7 +16,7 @@ static struct proc_dir_entry *get_users_count;
 static struct proc_dir_entry *get_max_mex_len;
 static struct proc_dir_entry *get_number_messages;
 
-int get_users_count_read(struct file *file, char *buf, size_t length, loff_t *offset)  {
+static ssize_t get_users_count_read(struct file *file, char *buf, size_t length, loff_t *offset)  {
 
     if (*offset > 255)
         return 0;
@@ -45,7 +45,7 @@ static struct file_operations f_ops_get_users_count = {
     .read = get_users_count_read,
 };
 
-int get_max_mex_len_read(struct file *file, char *buf, size_t length, loff_t *offset)  {
+static ssize_t get_max_mex_len_read(struct file *file, char *buf, size_t length, loff_t *offset)  {
 
     if (*offset > 255)
         return 0;
@@ -74,7 +74,7 @@ static struct file_operations f_ops_get_max_mex_len = {
     .read = get_max_mex_len_read,
 };
 
-int get_number_messages_mail_spot_read(struct file *file, char *buf, size_t length, loff_t *offset)  {
+static ssize_t get_number_messages_mail_spot_read(struct file *file, char *buf, size_t length, loff_t *offset)  {
 
     if (*offset > 255)
         return 0;
@@ -134,7 +134,7 @@ int init_module(void) {
         remove_proc_entry("get_max_mex_len", proc_parent);
         remove_proc_entry("get_users_count", proc_parent);
         remove_proc_entry("mail_spot_metadata",NULL);
-        printk("Error creating get_max_mex_len\n");
+        printk("Error creating get_number_messages\n");
         return -1;
     }
 
