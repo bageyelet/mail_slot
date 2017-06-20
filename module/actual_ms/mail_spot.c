@@ -128,11 +128,13 @@ static ssize_t mail_spot_write(struct file* filp, const char* buff, size_t len, 
     }
     char* mex = (char*)kmalloc(len+1, __GFP_WAIT);
     if (!mex) {
+        kfree(n);
         printk("%s: allocation of mex buffer failed, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
         return -2;
     }
     int ret = copy_from_user(mex, buff, len);
     if (ret != 0) {
+        kfree(n); kfree(mex);
         printk("%s: copy_from_user failed, minor=%d, pid=%d\n", MODNAME, minor, current->pid);
         return -3;
     }
