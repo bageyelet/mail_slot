@@ -1,6 +1,7 @@
 #include <linux/module.h>
 #include <asm/uaccess.h>
 #include <linux/proc_fs.h>
+#include <linux/sched.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Luca Borzacchiello");
@@ -21,7 +22,7 @@ static ssize_t get_users_count_read(struct file *file, char *buf, size_t length,
     if (*offset > 255)
         return 0;
 
-    int len, tot_len = 0;
+    int len, tot_len = 0, ret;
     char tmp[100];
     int i = *offset;
     for (; i<256; i++) {
@@ -30,7 +31,11 @@ static ssize_t get_users_count_read(struct file *file, char *buf, size_t length,
         if (tot_len + len > length) {
             break;
         } else {
-            memcpy(buf+tot_len, tmp, len);
+            ret = copy_to_user(buf+tot_len, tmp, len);
+            if (ret != 0) {
+                printk("%s: copy_to_user failed, pid=%d\n", MODNAME, current->pid);
+                return -1;
+            }
             tot_len += len;
         }
     }
@@ -50,7 +55,7 @@ static ssize_t get_max_mex_len_read(struct file *file, char *buf, size_t length,
     if (*offset > 255)
         return 0;
 
-    int len, tot_len = 0;
+    int len, tot_len = 0, ret;
     char tmp[100];
     int i = *offset;
     for (; i<256; i++) {
@@ -59,7 +64,11 @@ static ssize_t get_max_mex_len_read(struct file *file, char *buf, size_t length,
         if (tot_len + len > length) {
             break;
         } else {
-            memcpy(buf+tot_len, tmp, len);
+            ret = copy_to_user(buf+tot_len, tmp, len);
+            if (ret != 0) {
+                printk("%s: copy_to_user failed, pid=%d\n", MODNAME, current->pid);
+                return -1;
+            }
             tot_len += len;
         }
     }
@@ -79,7 +88,7 @@ static ssize_t get_number_messages_mail_spot_read(struct file *file, char *buf, 
     if (*offset > 255)
         return 0;
 
-    int len, tot_len = 0;
+    int len, tot_len = 0, ret;
     char tmp[100];
     int i = *offset;
     for (; i<256; i++) {
@@ -88,7 +97,11 @@ static ssize_t get_number_messages_mail_spot_read(struct file *file, char *buf, 
         if (tot_len + len > length) {
             break;
         } else {
-            memcpy(buf+tot_len, tmp, len);
+            ret = copy_to_user(buf+tot_len, tmp, len);
+            if (ret != 0) {
+                printk("%s: copy_to_user failed, pid=%d\n", MODNAME, current->pid);
+                return -1;
+            }
             tot_len += len;
         }
     }

@@ -639,6 +639,106 @@ deps_/media/sf_shared/mail_spot/module/proc_metadata/mail_spot_proc_metadata.o :
   /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/fcntl.h \
   /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi/asm/fcntl.h \
   /usr/src/linux-headers-3.16.0-4-common/include/uapi/asm-generic/fcntl.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/sched.h \
+    $(wildcard include/config/sched/debug.h) \
+    $(wildcard include/config/no/hz/common.h) \
+    $(wildcard include/config/lockup/detector.h) \
+    $(wildcard include/config/detect/hung/task.h) \
+    $(wildcard include/config/core/dump/default/elf/headers.h) \
+    $(wildcard include/config/sched/autogroup.h) \
+    $(wildcard include/config/virt/cpu/accounting/native.h) \
+    $(wildcard include/config/bsd/process/acct.h) \
+    $(wildcard include/config/taskstats.h) \
+    $(wildcard include/config/audit.h) \
+    $(wildcard include/config/cgroups.h) \
+    $(wildcard include/config/inotify/user.h) \
+    $(wildcard include/config/fanotify.h) \
+    $(wildcard include/config/posix/mqueue.h) \
+    $(wildcard include/config/keys.h) \
+    $(wildcard include/config/perf/events.h) \
+    $(wildcard include/config/schedstats.h) \
+    $(wildcard include/config/task/delay/acct.h) \
+    $(wildcard include/config/sched/mc.h) \
+    $(wildcard include/config/fair/group/sched.h) \
+    $(wildcard include/config/rt/group/sched.h) \
+    $(wildcard include/config/cgroup/sched.h) \
+    $(wildcard include/config/blk/dev/io/trace.h) \
+    $(wildcard include/config/rcu/boost.h) \
+    $(wildcard include/config/compat/brk.h) \
+    $(wildcard include/config/virt/cpu/accounting/gen.h) \
+    $(wildcard include/config/sysvipc.h) \
+    $(wildcard include/config/rt/mutexes.h) \
+    $(wildcard include/config/task/xacct.h) \
+    $(wildcard include/config/cpusets.h) \
+    $(wildcard include/config/futex.h) \
+    $(wildcard include/config/fault/injection.h) \
+    $(wildcard include/config/latencytop.h) \
+    $(wildcard include/config/function/graph/tracer.h) \
+    $(wildcard include/config/bcache.h) \
+    $(wildcard include/config/have/unstable/sched/clock.h) \
+    $(wildcard include/config/irq/time/accounting.h) \
+    $(wildcard include/config/no/hz/full.h) \
+    $(wildcard include/config/stack/growsup.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/sched.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/sched/prio.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/plist.h \
+    $(wildcard include/config/debug/pi/list.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/cputime.h \
+  arch/x86/include/generated/asm/cputime.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/asm-generic/cputime.h \
+    $(wildcard include/config/virt/cpu/accounting.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/asm-generic/cputime_jiffies.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/sem.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/sem.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/ipc.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/ipc.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi/asm/ipcbuf.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/asm-generic/ipcbuf.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi/asm/sembuf.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/signal.h \
+    $(wildcard include/config/old/sigaction.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/signal.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/asm/signal.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi/asm/signal.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/asm-generic/signal-defs.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi/asm/siginfo.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/asm-generic/siginfo.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/asm-generic/siginfo.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/proportions.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/seccomp.h \
+    $(wildcard include/config/seccomp.h) \
+    $(wildcard include/config/seccomp/filter.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/seccomp.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/asm/seccomp.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/asm/seccomp_64.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/unistd.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/asm/unistd.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi/asm/unistd.h \
+  arch/x86/include/generated/uapi/asm/unistd_64.h \
+  arch/x86/include/generated/asm/unistd_64_x32.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/asm/ia32_unistd.h \
+  arch/x86/include/generated/asm/unistd_32_ia32.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/rtmutex.h \
+    $(wildcard include/config/debug/rt/mutexes.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/resource.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/linux/resource.h \
+  /usr/src/linux-headers-3.16.0-4-common/arch/x86/include/uapi/asm/resource.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/asm-generic/resource.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/uapi/asm-generic/resource.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/hrtimer.h \
+    $(wildcard include/config/high/res/timers.h) \
+    $(wildcard include/config/timerfd.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/timerqueue.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/task_io_accounting.h \
+    $(wildcard include/config/task/io/accounting.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/latencytop.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/cred.h \
+    $(wildcard include/config/debug/credentials.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/key.h \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/assoc_array.h \
+    $(wildcard include/config/associative/array.h) \
+  /usr/src/linux-headers-3.16.0-4-common/include/linux/selinux.h \
+    $(wildcard include/config/security/selinux.h) \
 
 /media/sf_shared/mail_spot/module/proc_metadata/mail_spot_proc_metadata.o: $(deps_/media/sf_shared/mail_spot/module/proc_metadata/mail_spot_proc_metadata.o)
 
