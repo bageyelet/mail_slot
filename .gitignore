@@ -1,3 +1,5 @@
 *.o
 *.ko
 *.out
+*.cmd
+*.symvers
